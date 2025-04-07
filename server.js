@@ -2,47 +2,40 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-require("dotenv").config();
+require("dotenv").config(); // <== โหลดค่าจาก .env
+const Item = require("./models/item");  // <== นำเข้า Model ของ Item
 
 const app = express();
 
-// เชื่อมต่อ MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+// เชื่อม MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
   .catch((err) => console.log("❌ MongoDB connection error: ", err));
 
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Schema และ Model
-const itemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  image: { type: String, required: true },
-  amount: { type: Number, required: true },
-});
-const Item = mongoose.model("Item", itemSchema);
+// API สำหรับเพิ่มไอเทม
+app.post('/add-item', async (req, res) => {
+  const { name, imageURL, quantity } = req.body;
 
-// POST /add-item
-app.post("/add-item", async (req, res) => {
+  if (!name || !imageURL || !quantity) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
   try {
-    const { name, image, amount } = req.body;
+    const newItem = new Item({
+      name,
+      imageURL,
+      quantity
+    });
 
-    // ตรวจสอบข้อมูลที่ได้รับ
-    if (!name || !image || !amount) {
-      return res.status(400).json({ error: "ข้อมูลไม่ครบ" });
-    }
+    await newItem.save();  // บันทึกไอเทมใหม่ลงใน MongoDB
 
-    // สร้างและบันทึก Item ใหม่
-    const newItem = new Item({ name, image, amount });
-    await newItem.save();
-
-    res.status(200).json({ message: "เพิ่มของสำเร็จ" });
+    res.status(201).json(newItem);  // ส่งข้อมูลไอเทมที่เพิ่มเข้าไปกลับ
   } catch (error) {
-    console.error("❌ Error saving item:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์" });
+    res.status(500).json({ message: 'Error saving item' });
   }
 });
 
