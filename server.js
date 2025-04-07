@@ -6,7 +6,11 @@ require("dotenv").config();
 
 const app = express();
 
-mongoose.connect(process.env.MONGO_URI)
+// เชื่อมต่อ MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
   .catch((err) => console.log("❌ MongoDB connection error: ", err));
 
@@ -15,9 +19,9 @@ app.use(bodyParser.json());
 
 // Schema และ Model
 const itemSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  amount: Number,
+  name: { type: String, required: true },
+  image: { type: String, required: true },
+  amount: { type: Number, required: true },
 });
 const Item = mongoose.model("Item", itemSchema);
 
@@ -26,10 +30,12 @@ app.post("/add-item", async (req, res) => {
   try {
     const { name, image, amount } = req.body;
 
+    // ตรวจสอบข้อมูลที่ได้รับ
     if (!name || !image || !amount) {
       return res.status(400).json({ error: "ข้อมูลไม่ครบ" });
     }
 
+    // สร้างและบันทึก Item ใหม่
     const newItem = new Item({ name, image, amount });
     await newItem.save();
 
