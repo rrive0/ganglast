@@ -152,24 +152,36 @@
   </div>
 
   <script>
-    let items = JSON.parse(localStorage.getItem("items")) || [];
-
-    function saveItems() {
-      localStorage.setItem("items", JSON.stringify(items));
-    }
-
-    function addItem() {
+    async function addItem() {
       const name = document.getElementById("name").value.trim();
       const image = document.getElementById("image").value.trim();
       const amount = parseInt(document.getElementById("amount").value);
 
       if (name && image && !isNaN(amount) && amount > 0) {
-        items.push({ name, image, amount });
-        saveItems();
-        alert("✅ ทำการเพิ่มของเรียบร้อย");
-        document.getElementById("name").value = "";
-        document.getElementById("image").value = "";
-        document.getElementById("amount").value = "";
+        const newItem = { name, image, amount };
+
+        // ส่งข้อมูลไปยัง API ที่จัดการการบันทึกข้อมูล
+        try {
+        const response = await fetch('https://ganglast.onrender.com/add-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newItem),
+        });
+
+          if (response.ok) {
+            alert("✅ ทำการเพิ่มของเรียบร้อย");
+            document.getElementById("name").value = "";
+            document.getElementById("image").value = "";
+            document.getElementById("amount").value = "";
+          } else {
+            alert("⚠️ เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert("⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+        }
       } else {
         alert("⚠️ กรุณากรอกข้อมูลให้ครบและถูกต้อง");
       }
