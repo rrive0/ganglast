@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config(); // <== โหลดค่าจาก .env
-const Item = require("./models/item");  // <== นำเข้า Model ของ Item
+
+const Item = require('./models/item');  // <== นำเข้า Model ของ Item
 
 const app = express();
 
