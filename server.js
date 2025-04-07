@@ -9,9 +9,15 @@ const Item = require('./models/item');  // <== นำเข้า Model ขอ�
 const app = express();
 
 // เชื่อม MongoDB Atlas
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
-  .catch((err) => console.log("❌ MongoDB connection error: ", err));
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1); // หยุดการทำงานของแอปพลิเคชันถ้าไม่สามารถเชื่อมต่อ MongoDB ได้
+  });
 
 // Middleware
 app.use(cors());
@@ -36,6 +42,7 @@ app.post('/add-item', async (req, res) => {
 
     res.status(201).json(newItem);  // ส่งข้อมูลไอเทมที่เพิ่มเข้าไปกลับ
   } catch (error) {
+    console.error("Error saving item:", error);
     res.status(500).json({ message: 'Error saving item' });
   }
 });
