@@ -95,12 +95,15 @@
   <div class="item-container" id="itemList"></div>
 
   <script>
+    // ดึงข้อมูลที่บันทึกจาก localStorage
     const items = JSON.parse(localStorage.getItem("items")) || [];
     const list = document.getElementById("itemList");
 
+    // ถ้ายังไม่มีข้อมูล
     if (items.length === 0) {
       list.innerHTML = "<p>ยังไม่มีของที่บันทึกไว้</p>";
     } else {
+      // แสดงข้อมูลทั้งหมด
       items.forEach(item => {
         const div = document.createElement("div");
         div.className = "item";
