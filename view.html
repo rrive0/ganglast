@@ -98,7 +98,7 @@
     // ดึงข้อมูลจากเซิร์ฟเวอร์ Node.js (ไม่ใช้ API Render แล้ว)
     async function fetchItems() {
       try {
-        const response = await fetch('/items'); // เปลี่ยน URL เป็น local endpoint
+        const response = await fetch('https://ganglast.onrender.com/items');
         const items = await response.json();
         const list = document.getElementById("itemList");
 
