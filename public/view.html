@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รายการของที่บันทึกไว้</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #121212;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #74b9ff, 0 0 25px #74b9ff;
+    }
+
+    .item-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .item {
+      background: #2c2c2c;
+      border-radius: 10px;
+      padding: 20px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .item img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .item h3 {
+      margin: 10px 0;
+      font-size: 1.2rem;
+      color: #74b9ff;
+      text-shadow: 0 0 5px #74b9ff, 0 0 15px #74b9ff;
+    }
+
+    .item p {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #bbb;
+      padding: 20px 0;
+      background-color: #1f1f1f;
+    }
+
+    .footer a {
+      color: #74b9ff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #3498db;
+    }
+
+    .footer .powered-by {
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>จำนวนของแก๊ง</h1>
+  <div class="item-container" id="itemList"></div>
+
+  <script>
+    // ดึงข้อมูลจากเซิร์ฟเวอร์ Node.js (ไม่ใช้ API Render แล้ว)
+    async function fetchItems() {
+      try {
+        const response = await fetch('/items'); // เปลี่ยน URL เป็น local endpoint
+        const items = await response.json();
+        const list = document.getElementById("itemList");
+
+        if (items.length === 0) {
+          list.innerHTML = "<p>ยังไม่มีของที่บันทึกไว้</p>";
+        } else {
+          items.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+              <img src="${item.image}" alt="${item.name}">
+              <h3>${item.name}</h3>
+              <p>จำนวน: ${item.amount}</p>
+            `;
+            list.appendChild(div);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching items:", error);
+        const list = document.getElementById("itemList");
+        list.innerHTML = "<p>เกิดข้อผิดพลาดในการดึงข้อมูล</p>";
+      }
+    }
+
+    fetchItems();
+  </script>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>แจ้งปัญหาหรือคำแนะนำ <a href="https://www.facebook.com/lakksjslal.ksksiksks">ที่นี่</a></p>
+    <p class="powered-by">Website by JUTISTORY | Powered by Jox | © 2025</p>
+  </div>
+</body>
+</html>
