@@ -161,14 +161,14 @@
         const newItem = { name, image, amount };
   
         try {
-          const response = await fetch('/add-item', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newItem),
-          });
-  
+const response = await fetch('https://ganglast.onrender.com/add-item', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(newItem),
+  });
+
           if (response.ok) {
             alert("✅ ทำการเพิ่มของเรียบร้อย");
             document.getElementById("name").value = "";
