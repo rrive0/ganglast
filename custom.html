@@ -100,7 +100,6 @@
             animation: textGlow 2s infinite alternate, bounceIn 2s ease-out;
         }
 
-        /* Card for image expand */
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -166,7 +165,6 @@
             to { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 198, 255, 1); }
         }
 
-        /* Title */
         h1 {
             font-size: 3em;
             font-weight: bold;
@@ -184,7 +182,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Item Container */
         .item-container {
             display: flex;
             flex-wrap: wrap;
@@ -275,7 +272,6 @@
     </style>
 </head>
 <body>
-  <!-- Navbar -->
     <div class="navbar">
         <a href="view.html">หน้าแรก</a>
         <a href="add.html">เพิ่มของใหม่</a>
@@ -283,22 +279,23 @@
         <a href="index.html">ออกจากระบบ</a>
     </div>
 
-    <!-- Title -->
     <h1>แก้ไขจำนวนของ</h1>
 
-    <!-- Items Display -->
     <div class="item-container" id="itemList"></div>
 
     <script>
+        // ดึงข้อมูลจาก localStorage
         let items = JSON.parse(localStorage.getItem("items")) || [];
         const list = document.getElementById("itemList");
 
+        // ฟังก์ชันบันทึกข้อมูลลง localStorage
         function saveItems() {
             localStorage.setItem("items", JSON.stringify(items));
         }
 
+        // ฟังก์ชันแสดงรายการสินค้า
         function renderItems() {
-            list.innerHTML = ""; // เคลียร์ก่อนแสดงใหม่
+            list.innerHTML = ""; 
             if (items.length === 0) {
                 list.innerHTML = "<p>ยังไม่มีของที่บันทึกไว้</p>";
                 return;
@@ -318,6 +315,7 @@
             });
         }
 
+        // ฟังก์ชันอัปเดตจำนวน
         function updateAmount(index) {
             const input = document.getElementById(`amount-${index}`);
             const newAmount = parseInt(input.value);
@@ -330,6 +328,7 @@
             }
         }
 
+        // ฟังก์ชันลบรายการ
         function deleteItem(index) {
             if (confirm("❌ ต้องการลบรายการนี้จริงหรือไม่?")) {
                 items.splice(index, 1);
